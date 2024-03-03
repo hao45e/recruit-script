@@ -1,10 +1,9 @@
 
-
 // 标题包含内容和不包含内容
 let titleContain = ['java', '后端'];
 let titleExclude = [];
 // 最低薪资
-let leastSalary = 15000;
+let leastSalary = 20000;
 // 是否兼职
 let isPartTimeJob = true;
 // boss活跃 包含
@@ -12,6 +11,8 @@ let bossActiveContain = ['刚刚活跃','日内活跃'];
 // 详情 包含 不包含
 let descContain = [];
 let descExclude = ['统招', '全日制'];
+// 地点
+let wantLocation = '成都';
 
 class OrderedMap {
   constructor() {
@@ -124,7 +125,10 @@ async function checkJob(index, jobItem){
 
   let bossName = jobItem.find('.boss-name').text().trim();
 
-  if(isTitleContained && !isTitleExcluded && jobSalaryFlag){
+  let jobLocation = jobItem.find('.company-location').text().trim();
+  let jobLocationFlag = jobLocation.includes(wantLocation);
+
+  if(isTitleContained && !isTitleExcluded && jobSalaryFlag && jobLocationFlag){
     await jobItem.click();
     await sleep(2000);
 
