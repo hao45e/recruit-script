@@ -1,18 +1,20 @@
 
 // 标题包含内容和不包含内容
-let titleContain = ['java', '后端'];
+let titleContain = ['java', '后端', '全栈'];
 let titleExclude = [];
 // 最低薪资
-let leastSalary = 20000;
+let leastSalary = 16000;
 // 是否兼职
 let isPartTimeJob = true;
 // boss活跃 包含
-let bossActiveContain = ['刚刚活跃','日内活跃'];
+let bossActiveContain = ['刚刚活跃', '今日活跃','日内活跃', '本周活跃'];
 // 详情 包含 不包含
 let descContain = [];
-let descExclude = ['统招', '全日制'];
+let descExclude = ['统招', '全日制', '学士', '学位', '双证'];
 // 地点
 let wantLocation = '成都';
+// 是否有猎头
+let hasLietou = false;
 
 class OrderedMap {
   constructor() {
@@ -128,6 +130,12 @@ async function checkJob(index, jobItem){
   let jobLocation = jobItem.find('.company-location').text().trim();
   let jobLocationFlag = jobLocation.includes(wantLocation);
 
+  if(!hasLietou){
+    let jobTagAlt = jobItem.find(".job-tag-icon").attr('alt')
+    if(jobTagAlt == '猎头') return;
+  }
+  
+
   if(isTitleContained && !isTitleExcluded && jobSalaryFlag && jobLocationFlag){
     await jobItem.click();
     await sleep(2000);
@@ -198,8 +206,9 @@ async function checkDetail(){
 
 function appendHtml(){
   let str = '<table style="margin:0 auto;" border="1">';
+  let i = 0;
   dataMap.forEach((value, key) => {
-    str+='<tr my-id="'+key+'" title="'+value.jobDescStr+'"><td>'+value.index+'</td><td>'+value.jobName+'</td><td>'+value.jobSalary+'</td><td>'+value.bossName+'</td><td>'+value.jobActive+'</td><td><a target="_blank" href="'+key+'">查看</a></td></tr>';
+    str+='<tr my-id="'+key+'" title="'+value.jobDescStr+'"><td>'+(++i)+'</td><td>'+value.index+'</td><td>'+value.jobName+'</td><td>'+value.jobSalary+'</td><td>'+value.bossName+'</td><td>'+value.jobActive+'</td><td><a target="_blank" href="'+key+'">查看</a></td></tr>';
   });
   str+='</table></div>';
   
@@ -209,7 +218,7 @@ function appendHtml(){
 
 function initHtml(){
   $("#myDiv").remove();
-  $('body').prepend('<div id="myDiv" style="margin-top:70px;"><div id="myOperation"><input type="number" id="myPageNum" value="1"><button id="loadPage">加载</button><button id="reset">当前页重查</button></div><div id="myTable" style="height:200px; overflow-y:auto;"></div>');
+  $('body').prepend('<div id="myDiv" style="margin-top:70px;"><div id="myOperation"><input type="number" id="myPageNum" value="30"><button id="loadPage">加载</button><button id="reset">当前页重查</button></div><div id="myTable" style="height:200px; overflow-y:auto;"></div>');
 }
 $(document).on("click", "#loadPage", function(){
   let num = $("#myPageNum").val();
